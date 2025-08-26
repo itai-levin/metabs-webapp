@@ -1,17 +1,10 @@
+version: "3.8"
+
 services:
   webapp:
     build:
       context: .
-    expose:
-      - "8501"
-
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/certs
+    # publish ONLY to localhost so host nginx can reverse proxy to it
     ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - webapp
+      - "127.0.0.1:8501:8501"
+    restart: unless-stopped
