@@ -18,7 +18,7 @@ met_graph = load_nx_graph(GRAPH_PATH)
 ec_building_blocks = load_building_blocks('data/e_coli_metabolites_from_pathways.csv', sep='\t') 
 ec_building_blocks.add('[Mg+2]')
 
-reaction_df = pd.read_csv('data/all_reactions.csv', sep='\t')
+reaction_df = pd.read_csv('data/all_reactions.csv.gz', sep='\t')
 
 for c in ['level_0', 'Unnamed: 0.1', 'Unnamed: 0']:
     if c in reaction_df.columns:
