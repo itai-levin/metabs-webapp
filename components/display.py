@@ -1,6 +1,8 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import os 
+from rdkit import Chem
+from rdkit.Chem import Draw
 
 def show_structures_and_spectra(df_to_display, df, pred_spec, name_col='Name'):
   selected_names = st.multiselect('#### Select molecules:', df_to_display[name_col], default=None, max_selections=10, 
@@ -24,10 +26,12 @@ def show_structures_and_spectra(df_to_display, df, pred_spec, name_col='Name'):
       color= '{:02x}{:02x}{:02x}'.format(*[int(x*255) for x in cmap(i)])
       pubchem_link = 'https://pubchem.ncbi.nlm.nih.gov/#query='+smiles_to_show[i]+'&tab=similarity&similaritythreshold=100'
       if os.path.isfile('imgs/'+mol+'.png'):
-        # col1.markdown(f'<h1 style="color:#{color};font-size:18px;">{str(i+1)}. [{name}]({pubchem_link}):</h1>', unsafe_allow_html=True)
-        # col1.markdown('<h1 style="color:#{};font-size:18px;">{}. [{}]({}):</h1>'.format(color, str(i+1), name, pubchem_link), unsafe_allow_html=True)
-        col1.markdown('<a style="color:#{};font-size:18px;">{}. [{}]({}):</a>'.format(color, str(i+1), name, pubchem_link), unsafe_allow_html=True)
-        col1.image('imgs/'+mol+'.png', width=200)
+          col1.markdown('<a style="color:#{};font-size:18px;">{}. [{}]({}):</a>'.format(color, str(i+1), name, pubchem_link), unsafe_allow_html=True)
+          col1.image('imgs/'+mol+'.png', width=200)
+      if Chem.MolFromSmiles(smiles_to_show[i]) is not None:
+          img = Draw.MolToImage(Chem.MolFromSmiles(smiles_to_show[i]))
+          col1.markdown('<a style="color:#{};font-size:18px;">{}. [{}]({}):</a>'.format(color, str(i+1), name, pubchem_link), unsafe_allow_html=True)
+          col1.image(img, width=200)
       else:
         col1.markdown(f'<a style="color:#{color};font-size:18px;">{str(i+1)}. {name}:</a>', unsafe_allow_html=True)
         col1.markdown(f'<h1 style="color:#{color};font-size:18px;">Cannot display structure</h1>', unsafe_allow_html=True)
