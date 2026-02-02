@@ -1,0 +1,20 @@
+name: Keep Alive
+
+on:
+  schedule:
+    # Runs every 24 hours at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create empty commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Keep alive - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
